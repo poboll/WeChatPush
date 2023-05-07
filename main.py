@@ -123,13 +123,14 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
     week = week_list[today.weekday()]
     # 开学的第几周
     weeks = get_Today_Week()
-    # 获取在一起的日子的日期格式
+    # 获取放假的日子的日期格式
     love_year = int(config.love_date.split("-")[0])
     love_month = int(config.love_date.split("-")[1])
     love_day = int(config.love_date.split("-")[2])
     love_date = date(love_year, love_month, love_day)
-    # 获取在一起的日期差
+    # 获取放假的日期差
     love_days = str(today.__sub__(love_date)).split(" ")[0]
+    love = abs(int(love_days))
     # 获取生日的月和日
     birthday_month = int(config.birthday.split("-")[1])
     birthday_day = int(config.birthday.split("-")[2])
@@ -178,7 +179,7 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
                 "color": "#FF6100"
             },
             "love_day": {
-                "value": love_days,
+                "value": love,
                 "color": "#87CEEB"
             },
             "birthday": {
@@ -286,7 +287,7 @@ def send_Good_Night(to_user, access_token):
         "data": {
             "goodNight": {
                 "value": good_Night,
-                "color": "#87CEEB"
+                "color": "#00FFFF"
             },
             "week": {
                 "value": week,
@@ -377,6 +378,13 @@ if __name__ == '__main__':
                 print("开始睡眠: 等待推送第", i + 1, "讲课")
                 time.sleep(defference)
                 print("结束睡眠")
+                print("课程信息推送成功！")
+            elif defference < 0:
+                classInfo = todayClasses[i] + "\n" + "上课时间: " + config.course_Time[i] + "\n"
+                print(classInfo)
+                send_Class_Message(user, accessToken, classInfo)
+                print("课程信息推送成功！")
+                break
     while True:
         goodNightTime = config.good_Night_Time
         nowTime = datetime.now().strftime('%H:%M:%S')
